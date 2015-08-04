@@ -9,10 +9,26 @@ __email__ = "kevin.xu.fangzhou@gmail.com"
 
 import os
 import MySQLdb as msdb
+import re
+
+def decapitate(attrs):
+    head, body = [],[]
+    same = []
+    for i in range(len(attrs)):
+        tmp = re.split("\.", attrs[i])
+        head.append(tmp[0])
+        if tmp[1] in body:
+            same.append(i)
+            same.append(body.index(tmp[1]))
+        body.append(tmp[1])
+    for i in range(len(body)):
+        if i in same:
+            body[i] = head[i]+'.'+body[i]
+    return body
 
 class Insitu:
 
-    def __init__(self, sql_addr="128.3.62.222", uname="guest", db="insitu", attrs=[], froms=[]):
+    def __init__(self, sql_addr="128.3.62.222", uname="guest", db="insitu", attrs=[], froms=[], filters=[]):
         self.db = msdb.connect(host=sql_addr, user=uname, db=db)
         if len(attrs) == 0:
             attrs = ["image.image_path",
@@ -39,6 +55,11 @@ class Insitu:
                      "annot",
                      "main",
                      "main2info"]
+        if len(filters) == 0:
+            filters = ["main.id = main2info.main_id",
+                       "annot.main_id = main.id",
+                       "image.annot_id = annot.id",
+                       "main2info.symbol = 'twi'"]
         command = "SELECT "+attrs[0]
         for i in range(1,len(attrs)):
             command += " ,"+attrs[i]
@@ -47,12 +68,30 @@ class Insitu:
             command += ", "+froms[i]
 
         # filtering part
+        command += " WHERE "+filters[0]
+        for i in range(1,len(filters)):
+            command += " AND "+filters[i]
 
         command += ";"
         print command
         cur = self.db.cursor()
         cur.execute(command)
         self.rtn = cur.fetchall()
+        self.attrs = decapitate(attrs)
+
+        self.i = 0
+        self.n = len(self.rtn)
 
     def __iter__(self):
         return self
+
+    def next(self):
+        d = {}
+        if self.i < self.n:
+            i = self.i
+            self.i += 1
+            for j in range(len(self.attrs)):
+                d[self.attrs[j]] = self.rtn[i][j]
+            return d
+        else:
+            raise StopIteration()
