@@ -1,7 +1,7 @@
 # use UTP-8 #
 """
-    Import iterable class for insitu imagesc
-    with metadatas in mysql db.
+    Import iterable class for insitu images
+    with metadatas in LBL biology mysql db.
 """
 
 __author__ = "Xu Fangzhou"
