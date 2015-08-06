@@ -1,4 +1,4 @@
-# use UTP-8 #
+# -*- coding: utf-8 -*-
 """
     Import iterable class for insitu images
     with metadatas in LBL biology mysql db.
@@ -6,41 +6,42 @@
     Here's a few useful schema in the insitu
     database of the LBL biology sql db:
 
-    create table main (
-        id int(10) unsigned,
-        est_id varchar(20),
-        date    datetime,
-        species  set('D. melanogaster','D. pseudoobscura','D. virilis','D. simulans’),  fly_strain  enum('wt','transgenic line’),
-        tissue set('embryo','imaginal_disc’),
-                is_published tinyint(4),
-        publish_date timestamp
-    );
+        create table main (
+            id int(10) unsigned,
+            est_id varchar(20),
+            date    datetime,
+            species  set('D. melanogaster','D. pseudoobscura','D. virilis','D. simulans’),
+            fly_strain  enum('wt','transgenic line’),
+            tissue set('embryo','imaginal_disc’),
+            is_published tinyint(4),
+            publish_date timestamp
+        );
 
-    create table main2info (
-        main_id int references main(id),
-        fbgn char(11),
-        clone varchar(16),
-        symbol varchar(64)
-    );
+        create table main2info (
+            main_id int references main(id),
+            fbgn char(11),
+            clone varchar(16),
+            symbol varchar(64)
+        );
 
-    create table annot (
-        id int,
-        main_id int references main(id),
-        stage int
-    );
+        create table annot (
+            id int,
+            main_id int references main(id),
+            stage int
+        );
 
-    create table image (
-        id int,
-        annot_id int references annot(id),
-        image_path varchar(50),
-        magnification enum(‘low’,’high’),
-        ap enum('anterior','posterior','middle’),
-        dv enum('lateral','dorsal','ventral’),
-        orientation enum('PE_up','PE_down’),
-        handedness set('AP_inverted','DV_inverted','AP_DV_inverted’),
-        image_processing_flags set('wrong_stage_bin','image_reject','mesh_reject','not_sure’),
-        validated enum('unknown','todo','no','yes','likely')
-    );
+        create table image (
+            id int,
+            annot_id int references annot(id),
+            image_path varchar(50),
+            magnification enum(‘low’,’high’),
+            ap enum('anterior','posterior','middle’),
+            dv enum('lateral','dorsal','ventral’),
+            orientation enum('PE_up','PE_down’),
+            handedness set('AP_inverted','DV_inverted','AP_DV_inverted’),
+            image_processing_flags set('wrong_stage_bin','image_reject','mesh_reject','not_sure’),
+            validated enum('unknown','todo','no','yes','likely')
+        );
 
 """
 
