@@ -35,7 +35,7 @@ def trans(com):
 class Insitu:
 
     def __init__(self, sql_addr="128.3.62.222", uname="guest", db="insitu", attrs=[], froms=[], filters=[]):
-        self.db = msdb.connect(host=sql_addr, user=uname, db=db)
+        # self.db = msdb.connect(host=sql_addr, user=uname, db=db)
         if len(attrs) == 0:
             attrs = ["image.id", # depricate
                      "image.image_path",
