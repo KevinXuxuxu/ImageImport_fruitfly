@@ -10,6 +10,7 @@ __email__ = "kevin.xu.fangzhou@gmail.com"
 import os
 import MySQLdb as msdb
 import re
+import csv
 
 def decapitate(attrs):
     head, body = [],[]
@@ -26,12 +27,17 @@ def decapitate(attrs):
             body[i] = head[i]+'.'+body[i]
     return body
 
+def trans(com):
+    rtn = com.replace(';','\;')
+    rtn = rtn.replace("'","\\'")
+    return rtn
+
 class Insitu:
 
     def __init__(self, sql_addr="128.3.62.222", uname="guest", db="insitu", attrs=[], froms=[], filters=[]):
         self.db = msdb.connect(host=sql_addr, user=uname, db=db)
         if len(attrs) == 0:
-            attrs = ["image.id" # depricate
+            attrs = ["image.id", # depricate
                      "image.image_path",
                      "image.magnification",
                      "image.ap",
@@ -75,9 +81,24 @@ class Insitu:
 
         command += ";"
         print command
-        cur = self.db.cursor()
-        cur.execute(command)
-        self.rtn = cur.fetchall()
+
+        # temporary measure: log into sql through fangzhou@toy.lbl.gov
+
+        command = trans(command)
+        command_line = "echo \"echo %s | mysql -u %s -h %s %s\" | ssh fangzhou@toy.lbl.gov > out.tsv" %(command, uname, sql_addr, db)
+        print command_line
+        os.system(command_line)
+        fp = open("out.tsv")
+        r = csv.reader(fp, delimiter='\t', quoting=csv.QUOTE_ALL)
+        self.rtn = []
+        for i in r:
+            self.rtn += [i]
+        fp.close()
+        os.system("rm out.tsv")
+
+        # cur = self.db.cursor()
+        # cur.execute(command)
+        # self.rtn = cur.fetchall()
         self.attrs = decapitate(attrs)
 
         self.i = 0
