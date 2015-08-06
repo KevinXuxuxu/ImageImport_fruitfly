@@ -101,7 +101,7 @@ class Insitu:
         # self.rtn = cur.fetchall()
         self.attrs = decapitate(attrs)
 
-        self.i = 0
+        self.i = 1
         self.n = len(self.rtn)
 
     def __iter__(self):
