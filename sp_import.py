@@ -5,7 +5,7 @@ __email__ = "kevin.xu.fangzhou@gmail.com"
 import os
 from scipy.io sio
 
-class ImageSet:
+class SPImageSet:
 
     def __init__(self, _name):
         self.name = _name
