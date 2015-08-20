@@ -3,7 +3,7 @@ __author__ = "Xu Fangzhou"
 __email__ = "kevin.xu.fangzhou@gmail.com"
 
 import os
-from scipy.io sio
+import scipy.io as sio
 
 class SPImageSet:
 
