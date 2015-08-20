@@ -9,7 +9,7 @@ class SPImageSet:
 
     def __init__(self, _name):
         self.name = _name
-        if name not in os.listdir('.'):
+        if _name not in os.listdir('.'):
             raise Exception("No such image set in dir: "+os.getcwd())
         self.name_list = []
         for name in os.listdir(_name):
