@@ -33,8 +33,8 @@ class SPImageSet:
             mat_contents = sio.loadmat(self.name + '/' + self.name_list[i])
             for i in range(1,len(mat_contents['gcs'])+1):
                 dd = {'id': i,
-                      'gc': mat_contents['gcs'][i-1],
-                      'boundary': mat_contents['boundaries'][i-1][0]}
+                      'gc': mat_contents['gcs'][i-1].tolist(),
+                      'boundary': mat_contents['boundaries'][i-1][0].tolist()}
                 d['sp'] += [dd]
             return d
         else:
